@@ -1,6 +1,7 @@
 from app.services.rag.embedder import Embedder
 from app.services.rag.vector_store import VectorStore
 from app.services.rag.document_loader import DocumentLoader
+from app.services.llm_service import LLMService
 
 
 class RAGService:
@@ -8,6 +9,7 @@ class RAGService:
     def __init__(self):
         self.embedder = Embedder()
         self.vector_store = VectorStore()
+        self.llm = LLMService()
 
         loader = DocumentLoader()
         docs = loader.load()
@@ -21,8 +23,6 @@ class RAGService:
 
         docs = self.vector_store.search(query_embedding)
 
-        answer = self.generate_answer(query, docs)
-        return answer
+        answer = self.llm.generate(query, docs)
 
-    def generate_answer(self, query, docs):
-        return f"Context: {docs} \nAnswer: Based on this, {query}"
+        return answer
